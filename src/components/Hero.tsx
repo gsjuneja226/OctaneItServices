@@ -186,7 +186,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="relative w-full overflow-hidden isolate select-none bg-[#0e0502] text-white h-[calc(100svh-4rem)] md:h-[100svh] min-h-[560px] border-b border-[#240d05] flex flex-col justify-between">
+    <section className="relative w-full overflow-hidden isolate select-none bg-[#0e0502] text-white h-[calc(100svh-4rem)] md:h-[100svh] min-h-[560px] border-b border-[#240d05] flex flex-col justify-end">
       <style jsx global>{`
         .octane-headline {
           font-family: 'Archivo', Impact, sans-serif;
@@ -273,55 +273,58 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 2. Top Banner Label (Seamless with Next.js header, no duplicate nav) */}
-      <div className="relative z-[4] px-4 sm:px-8 pt-3 sm:pt-6 flex items-center justify-between pointer-events-none">
-        <div className="text-[10px] sm:text-xs font-mono text-[#d0b38a] uppercase tracking-widest font-semibold flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#94ab76] animate-pulse"></span>
-          <span>Boutique Digital &amp; Web Engineering Studio</span>
-        </div>
-      </div>
-
-      {/* 3. Headline: OCTANE (z-index: 1 - passes BEHIND the creature!) */}
-      <h1 className="octane-headline absolute left-[3vw] top-[9vw] sm:top-[6vw] md:top-[4vw] m-0 p-0 z-[1] text-[19vw] sm:text-[22vw] md:text-[25vw] leading-none whitespace-nowrap uppercase text-white select-none pointer-events-none tracking-tight">
+      {/* 2. Headline: OCTANE (z-index: 1 - passes BEHIND the creature!) */}
+      <h1 className="octane-headline absolute left-[3vw] top-[5vw] sm:top-[5vw] md:top-[4vw] m-0 p-0 z-[1] text-[19vw] sm:text-[22vw] md:text-[25vw] leading-none whitespace-nowrap uppercase text-white select-none pointer-events-none tracking-tight">
         OCTANE
       </h1>
 
-      {/* 4. Right Tagline (z-index: 1 on desktop, hidden on tiny mobile to keep it uncluttered) */}
-      <div className="octane-sans absolute hidden sm:block right-[4vw] md:right-[6vw] top-[50%] md:top-[54%] m-0 p-0 z-[1] text-right text-xs md:text-[1.4vw] leading-[1.45] uppercase text-white select-none pointer-events-none">
-        <span className="block font-medium tracking-wide text-neutral-100">// DIGITAL STUDIO</span>
-        <span className="block text-[#d0b38a] font-semibold">
-          ENGINEERING &amp; SEARCH
+      {/* 3. Right Tagline (z-index: 1 on desktop) */}
+      <div className="octane-sans absolute hidden md:block right-[4vw] md:right-[6vw] top-[50%] md:top-[52%] m-0 p-0 z-[1] text-right leading-tight select-none pointer-events-none">
+        <span className="block text-[11px] font-mono tracking-widest text-[#94ab76] uppercase font-bold">// DELIVERABLES</span>
+        <span className="block text-lg md:text-[1.5vw] font-black uppercase text-white tracking-tight mt-1">
+          CODE • SEARCH • ADS
+        </span>
+        <span className="block text-xs md:text-[1vw] text-[#d0b38a] font-medium uppercase mt-0.5">
+          Zero Retainer Bloat
         </span>
       </div>
 
-      {/* 5. Bottom-Left Description + Direct Interactive CTAs (z-index: 4) */}
-      <div className="relative z-[4] px-4 sm:px-8 pb-8 sm:pb-12 space-y-4 max-w-xl">
-        {/* Descriptive Lines */}
-        <p className="octane-sans text-xs sm:text-sm md:text-[1.05vw] leading-[1.65] uppercase text-[#cfbeaf] select-none m-0 p-0">
-          <span className="block font-medium text-white">// WE BUILD FAST NEXT.JS PLATFORMS,</span>
-          <span className="block pl-3 sm:pl-5 text-neutral-300">
-            RUN ACCOUNTABLE PAID AD CAMPAIGNS,
-          </span>
-          <span className="block text-[#d0b38a]">
-            AND DELIVER VERIFIED TECHNICAL SEO.
-          </span>
-        </p>
+      {/* 4. Bottom Services Showcase + Direct Interactive CTAs (z-index: 4) */}
+      <div className="relative z-[4] px-4 sm:px-8 pb-6 sm:pb-10 space-y-3 max-w-xl">
+        {/* Services High-Contrast Display Card (Zero color mixing on mobile) */}
+        <div className="bg-[#0e0502]/92 sm:bg-[#0e0502]/85 backdrop-blur-md p-3.5 sm:p-4 rounded-2xl border border-[#3e1a0d] shadow-2xl space-y-2">
+          {/* Main Services List (High contrast, crystal clear readability) */}
+          <div className="space-y-1.5 text-xs sm:text-sm">
+            <div className="flex items-center gap-2 text-white font-bold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#fcd699] flex-shrink-0"></span>
+              <span>Fast Next.js Websites &amp; Web Applications</span>
+            </div>
+            <div className="flex items-center gap-2 text-[#f2ebe4] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#94ab76] flex-shrink-0"></span>
+              <span>Performance Google &amp; Meta Ads (Cost-Per-Lead)</span>
+            </div>
+            <div className="flex items-center gap-2 text-[#e8ded5] font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#fcd699] flex-shrink-0"></span>
+              <span>Technical &amp; AI Search SEO • Vertical Video Reels</span>
+            </div>
+          </div>
+        </div>
 
         {/* Interactive Action Buttons */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <Link
             href="/contact"
-            className="py-2.5 px-5 sm:py-3 sm:px-6 rounded-xl text-xs sm:text-sm font-bold bg-[#d0b38a] hover:bg-[#dec5a2] text-[#0e0502] transition-all text-center inline-flex items-center gap-2 group cursor-pointer shadow-xl active:scale-95"
+            className="py-2.5 px-5 sm:py-3 sm:px-6 rounded-xl text-xs sm:text-sm font-bold bg-[#d0b38a] hover:bg-[#dec5a2] text-[#0e0502] transition-all text-center inline-flex items-center justify-center gap-2 group cursor-pointer shadow-xl active:scale-95"
           >
-            <span>Post a project</span>
+            <span>Tell us what you are working on</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
             href="/services"
-            className="py-2.5 px-5 sm:py-3 sm:px-6 rounded-xl text-xs sm:text-sm font-semibold bg-[#1a0a05]/90 hover:bg-[#250e07] text-white border border-[#34150a] backdrop-blur-md transition-colors text-center inline-block cursor-pointer active:scale-95"
+            className="py-2 px-4 sm:py-3 sm:px-6 rounded-xl text-xs sm:text-sm font-semibold bg-[#1a0a05]/95 hover:bg-[#250e07] text-white border border-[#34150a] backdrop-blur-md transition-colors text-center inline-flex items-center justify-center cursor-pointer active:scale-95"
           >
-            Explore all services
+            Explore all 14 services
           </Link>
         </div>
       </div>
