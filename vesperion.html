@@ -441,6 +441,9 @@
         }
       }
 
+      let userInteracted = false;
+      let lastInteractionTime = 0;
+
       function easeLoop(timestamp) {
         if (!lastTime) lastTime = timestamp;
         const dt = Math.min(timestamp - lastTime, 64);
@@ -456,13 +459,12 @@
         }
 
         if (coarseQuery.matches) {
-          // Coarse pointer idle animation: 11s period, 0.5 deflection
-          const angle = (timestamp / 11000) * 2 * Math.PI;
-          currentX = 0.5 * Math.cos(angle);
-          currentY = 0.5 * Math.sin(angle);
-          applyGaze(currentX, currentY);
-          rafId = requestAnimationFrame(easeLoop);
-          return;
+          const timeSinceTouch = Date.now() - lastInteractionTime;
+          if (!userInteracted || timeSinceTouch > 6000) {
+            const angle = (timestamp / 11000) * 2 * Math.PI;
+            targetX = 0.5 * Math.cos(angle);
+            targetY = 0.5 * Math.sin(angle);
+          }
         }
 
         // Time-based exponential ease
@@ -470,8 +472,12 @@
         currentX += (targetX - currentX) * k;
         currentY += (targetY - currentY) * k;
 
+        const isCoarseIdle =
+          coarseQuery.matches &&
+          (!userInteracted || Date.now() - lastInteractionTime > 6000);
+
         // Check if arrived within 0.0005
-        if (Math.abs(targetX - currentX) < 0.0005 && Math.abs(targetY - currentY) < 0.0005) {
+        if (!isCoarseIdle && Math.abs(targetX - currentX) < 0.0005 && Math.abs(targetY - currentY) < 0.0005) {
           currentX = targetX;
           currentY = targetY;
           applyGaze(currentX, currentY);
@@ -499,15 +505,15 @@
         }
       }
 
-      function onPointerMove(e) {
-        if (reducedMotionQuery.matches || coarseQuery.matches) return;
+      function handlePointerOrTouch(clientX, clientY) {
+        if (reducedMotionQuery.matches) return;
 
         const rect = frame.getBoundingClientRect();
         const midX = rect.left + rect.width * 0.49463;
         const midY = rect.top + rect.height * 0.34444;
 
-        const dx = e.clientX - midX;
-        const dy = e.clientY - midY;
+        const dx = clientX - midX;
+        const dy = clientY - midY;
         const dist = Math.hypot(dx, dy);
 
         // 6px dead zone around eye midpoint
@@ -518,8 +524,30 @@
         // Target is unit vector: direction only, distance discarded
         targetX = dx / dist;
         targetY = dy / dist;
+        userInteracted = true;
+        lastInteractionTime = Date.now();
 
         startLoop();
+      }
+
+      function onPointerMove(e) {
+        handlePointerOrTouch(e.clientX, e.clientY);
+      }
+
+      function onPointerDown(e) {
+        handlePointerOrTouch(e.clientX, e.clientY);
+      }
+
+      function onTouchStart(e) {
+        if (e.touches && e.touches.length > 0) {
+          handlePointerOrTouch(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }
+
+      function onTouchMove(e) {
+        if (e.touches && e.touches.length > 0) {
+          handlePointerOrTouch(e.touches[0].clientX, e.touches[0].clientY);
+        }
       }
 
       function handleModeChange() {
@@ -530,14 +558,15 @@
           targetX = 0;
           targetY = 0;
           applyGaze(0, 0);
-        } else if (coarseQuery.matches) {
-          startLoop();
         } else {
           startLoop();
         }
       }
 
       window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('pointerdown', onPointerDown, { passive: true });
+      window.addEventListener('touchstart', onTouchStart, { passive: true });
+      window.addEventListener('touchmove', onTouchMove, { passive: true });
 
       if (coarseQuery.addEventListener) {
         coarseQuery.addEventListener('change', handleModeChange);

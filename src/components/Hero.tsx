@@ -13,6 +13,8 @@ export default function Hero() {
   const currentRef = useRef({ x: 0, y: 0 });
   const rafIdRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
+  const userInteractedRef = useRef(false);
+  const lastInteractionTimeRef = useRef(0);
 
   useEffect(() => {
     const coarseQuery = window.matchMedia("(pointer: coarse)");
@@ -44,14 +46,14 @@ export default function Hero() {
         return;
       }
 
+      // On coarse pointer (phone/touch), if no recent tap/touch for 6s, run gentle ambient loop
       if (coarseQuery.matches) {
-        // 11s circular idle for coarse pointer / mobile touch screens
-        const angle = (timestamp / 11000) * 2 * Math.PI;
-        currentRef.current.x = 0.5 * Math.cos(angle);
-        currentRef.current.y = 0.5 * Math.sin(angle);
-        applyGaze(currentRef.current.x, currentRef.current.y);
-        rafIdRef.current = requestAnimationFrame(easeLoop);
-        return;
+        const timeSinceTouch = Date.now() - lastInteractionTimeRef.current;
+        if (!userInteractedRef.current || timeSinceTouch > 6000) {
+          const angle = (timestamp / 11000) * 2 * Math.PI;
+          targetRef.current.x = 0.5 * Math.cos(angle);
+          targetRef.current.y = 0.5 * Math.sin(angle);
+        }
       }
 
       // Time-based exponential ease: k = 1 - exp(-dt / 95)
@@ -59,8 +61,13 @@ export default function Hero() {
       currentRef.current.x += (targetRef.current.x - currentRef.current.x) * k;
       currentRef.current.y += (targetRef.current.y - currentRef.current.y) * k;
 
-      // Settle within 0.0005
+      const isCoarseIdle =
+        coarseQuery.matches &&
+        (!userInteractedRef.current || Date.now() - lastInteractionTimeRef.current > 6000);
+
+      // Settle within 0.0005 if not in ambient loop
       if (
+        !isCoarseIdle &&
         Math.abs(targetRef.current.x - currentRef.current.x) < 0.0005 &&
         Math.abs(targetRef.current.y - currentRef.current.y) < 0.0005
       ) {
@@ -91,16 +98,16 @@ export default function Hero() {
       }
     }
 
-    function onPointerMove(e: PointerEvent) {
-      if (reducedMotionQuery.matches || coarseQuery.matches) return;
+    function handlePointerOrTouch(clientX: number, clientY: number) {
+      if (reducedMotionQuery.matches) return;
       if (!frameRef.current) return;
 
       const rect = frameRef.current.getBoundingClientRect();
       const midX = rect.left + rect.width * 0.49463;
       const midY = rect.top + rect.height * 0.34444;
 
-      const dx = e.clientX - midX;
-      const dy = e.clientY - midY;
+      const dx = clientX - midX;
+      const dy = clientY - midY;
       const dist = Math.hypot(dx, dy);
 
       // 6px dead zone around eye midpoint
@@ -109,8 +116,30 @@ export default function Hero() {
       // Target is normalized unit vector: direction only, distance discarded
       targetRef.current.x = dx / dist;
       targetRef.current.y = dy / dist;
+      userInteractedRef.current = true;
+      lastInteractionTimeRef.current = Date.now();
 
       startLoop();
+    }
+
+    function onPointerMove(e: PointerEvent) {
+      handlePointerOrTouch(e.clientX, e.clientY);
+    }
+
+    function onPointerDown(e: PointerEvent) {
+      handlePointerOrTouch(e.clientX, e.clientY);
+    }
+
+    function onTouchStart(e: TouchEvent) {
+      if (e.touches && e.touches.length > 0) {
+        handlePointerOrTouch(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }
+
+    function onTouchMove(e: TouchEvent) {
+      if (e.touches && e.touches.length > 0) {
+        handlePointerOrTouch(e.touches[0].clientX, e.touches[0].clientY);
+      }
     }
 
     function handleModeChange() {
@@ -125,6 +154,9 @@ export default function Hero() {
     }
 
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerdown", onPointerDown, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
 
     if (coarseQuery.addEventListener) {
       coarseQuery.addEventListener("change", handleModeChange);
@@ -136,14 +168,15 @@ export default function Hero() {
 
     if (reducedMotionQuery.matches) {
       applyGaze(0, 0);
-    } else if (coarseQuery.matches) {
-      startLoop();
     } else {
-      applyGaze(0, 0);
+      startLoop();
     }
 
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
       if (coarseQuery.removeEventListener) {
         coarseQuery.removeEventListener("change", handleModeChange);
         reducedMotionQuery.removeEventListener("change", handleModeChange);
