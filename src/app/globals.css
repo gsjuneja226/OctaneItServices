@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62,800&family=Onest:wght@400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ground: #0e0502;
+  --surface: #1a0a05;
+  --surface-hover: #240e07;
+  --border: #2e1208;
+  --border-subtle: #220c05;
+  --ink: #ffffff;
+  --ink-secondary: #b8a89d;
+  --ink-muted: #7d6b5f;
+  --warm: #d0b38a;
+  --amber: #94ab76;
+  --dim: #1f0c06;
+}
+
+@layer base {
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    background-color: #0e0502;
+    color: #ffffff;
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom dark espresso brown scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0e0502;
+}
+::-webkit-scrollbar-thumb {
+  background: #2e1208;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4a1f0e;
+}

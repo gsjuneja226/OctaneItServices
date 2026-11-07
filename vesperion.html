@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vesperion</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%232b1206'/%3E%3Cimage href='https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/logo.webp' width='24' height='24' x='4' y='4'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62,800&family=Onest:wght@400&display=swap">
+  <style>
+    :root {
+      --ground: #1a0601;   /* fallback behind the film, sampled from it */
+      --ink:    #ffffff;   /* all type */
+      --warm:   #d0b38a;   /* the suit, in the picture only */
+      --amber:  #94ab76;   /* the crystals, in the picture only */
+      --dim:    #2b1206;   /* nothing but the favicon plate */
+      --ease-standard: cubic-bezier(.4, 0, .2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--ground);
+      color: var(--ink);
+      font-synthesis: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    main {
+      position: relative;
+      min-height: 100svh;
+      width: 100%;
+      overflow: hidden;
+      isolation: isolate;
+      background: var(--ground);
+    }
+
+    /* Cover Frame holding scene, cut-out, and eyes */
+    .frame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      min-width: 100%;
+      min-height: 100%;
+      aspect-ratio: 16 / 9;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Scene cavern layer */
+    .scene-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Character cutout layer */
+    .figure-layer {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: block;
+    }
+
+    /* Eyes */
+    .eye {
+      position: absolute;
+      width: 5.000%;
+      aspect-ratio: 1 / 1;
+      translate: -50% -50%;
+      z-index: 3;
+      pointer-events: none;
+      user-select: none;
+      overflow: visible;
+    }
+
+    .eye-left {
+      left: 44.160%;
+      top: 34.340%;
+    }
+
+    .eye-right {
+      left: 54.766%;
+      top: 34.549%;
+    }
+
+    .eye > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      transform: translate(calc(var(--gx, 0) * 14.06%), calc(var(--gy, 0) * 14.06%));
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    /* Navigation */
+    nav {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2.15vw 2.58vw;
+      font-family: 'Onest', Arial, sans-serif;
+      font-weight: 400;
+      font-size: 1.13vw;
+      line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      user-select: none;
+    }
+
+    .nav-left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.35vw;
+      white-space: nowrap;
+    }
+
+    .nav-logo {
+      width: 1.35em;
+      height: 1.35em;
+      display: block;
+      pointer-events: none;
+    }
+
+    .nav-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 3.9vw;
+      white-space: nowrap;
+    }
+
+    .nav-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.9vw;
+      white-space: nowrap;
+    }
+
+    .action-circle {
+      width: 2.25vw;
+      height: 2.25vw;
+      border: 1.5px solid #ffffff;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .action-circle svg {
+      display: block;
+      width: 44%;
+      height: 44%;
+    }
+
+    /* Headline */
+    .headline {
+      position: absolute;
+      left: 2.58vw;
+      top: 7vw;
+      margin: 0;
+      padding: 0;
+      z-index: 1;
+      font-family: 'Archivo', Impact, sans-serif;
+      font-variation-settings: 'wdth' 62, 'wght' 800;
+      font-stretch: 62%;
+      font-weight: 800;
+      font-size: 23.5vw;
+      line-height: 1;
+      letter-spacing: 0;
+      white-space: nowrap;
+      text-transform: uppercase;
+      color: var(--ink);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Right Tagline */
+    .right-tagline {
+      position: absolute;
+      left: 71.5%;
+      top: 56.7%;
+      margin: 0;
+      padding: 0;
+      z-index: 1;
+      font-family: 'Onest', Arial, sans-serif;
+      font-weight: 400;
+      font-size: 1.61vw;
+      line-height: 1.45;
+      text-transform: uppercase;
+      color: var(--ink);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .right-tagline span {
+      display: block;
+    }
+
+    .right-tagline span:nth-child(2) {
+      padding-left: 2.85vw;
+    }
+
+    /* Bottom-Left Description */
+    .bottom-description {
+      position: absolute;
+      left: 3.95vw;
+      bottom: 7.7vh;
+      margin: 0;
+      padding: 0;
+      z-index: 1;
+      font-family: 'Onest', Arial, sans-serif;
+      font-weight: 400;
+      font-size: 1.075vw;
+      line-height: 1.75;
+      text-transform: uppercase;
+      color: var(--ink);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .bottom-description span {
+      display: block;
+    }
+
+    .bottom-description span:nth-child(2) {
+      padding-left: 3.6vw;
+    }
+
+    /* Mobile Responsive (700px and below) */
+    @media (max-width: 700px) {
+      main {
+        min-height: max(740px, 100svh);
+      }
+
+      nav {
+        padding: 24px 20px 0;
+        flex-wrap: wrap;
+        gap: 28px;
+        font-size: 12px;
+      }
+
+      .nav-left {
+        gap: 6px;
+      }
+
+      .nav-center {
+        position: static;
+        transform: none;
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+        order: 3;
+      }
+
+      .nav-right {
+        gap: 10px;
+      }
+
+      .action-circle {
+        width: 28px;
+        height: 28px;
+      }
+
+      .headline {
+        top: 144px;
+        left: 2.58vw;
+        font-size: 23.5vw;
+      }
+
+      .right-tagline {
+        left: auto;
+        right: 22px;
+        top: 40%;
+        font-size: 18px;
+        line-height: 1.5;
+      }
+
+      .right-tagline span:nth-child(2) {
+        padding-left: 24px;
+      }
+
+      .bottom-description {
+        left: 22px;
+        right: 22px;
+        bottom: 36px;
+        font-size: 12px;
+        line-height: 1.8;
+      }
+
+      .bottom-description span:nth-child(2) {
+        padding-left: 20px;
+      }
+    }
+
+    /* Ultra-small Mobile (360px and below) */
+    @media (max-width: 360px) {
+      nav {
+        padding: 16px;
+        font-size: 11px;
+      }
+
+      .bottom-description {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <!-- 1. The Cover Frame -->
+    <div class="frame" aria-hidden="true">
+      <img
+        class="scene-layer"
+        src="https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/scene-2.webp"
+        alt=""
+        fetchpriority="high"
+        aria-hidden="true"
+      >
+      <img
+        class="figure-layer"
+        src="https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/figure-1.webp"
+        alt=""
+        aria-hidden="true"
+      >
+      <span class="eye eye-left" aria-hidden="true">
+        <img
+          class="pupil"
+          src="https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/pupil-1.webp"
+          alt=""
+          aria-hidden="true"
+        >
+      </span>
+      <span class="eye eye-right" aria-hidden="true">
+        <img
+          class="pupil"
+          src="https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/pupil-1.webp"
+          alt=""
+          aria-hidden="true"
+        >
+      </span>
+    </div>
+
+    <!-- 2. The Navigation -->
+    <nav>
+      <div class="nav-left">
+        <img
+          class="nav-logo"
+          src="https://wjwoitlioftohvwfymeq.supabase.co/storage/v1/object/public/designs/vesperion/logo.webp"
+          alt=""
+          aria-hidden="true"
+        >
+        <span>MARLOW STUDIO</span>
+      </div>
+      <div class="nav-center">
+        <span>SELECTED</span>
+        <span>LOGS</span>
+        <span>NOTES</span>
+        <span>CAREER</span>
+      </div>
+      <div class="nav-right">
+        <span>// BOOK ME</span>
+        <div class="action-circle" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="7" y1="7" x2="17" y2="7"></line>
+            <line x1="17" y1="7" x2="17" y2="17"></line>
+          </svg>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 3. The Headline -->
+    <h1 class="headline">VESPERION</h1>
+
+    <!-- 4. The Right Tagline -->
+    <p class="right-tagline">
+      <span>// DETAIL THAT</span>
+      <span>CARRIES THE STORY</span>
+    </p>
+
+    <!-- 5. The Bottom-Left Description -->
+    <p class="bottom-description">
+      <span>// I’M MARLOW, A FREELANCE VISUAL DESIGNER</span>
+      <span>WORKING WITH FOUNDERS AND SMALL TEAMS</span>
+      <span>ON IDENTITIES THAT REALLY DO LAST.</span>
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      const frame = document.querySelector('.frame');
+      const pupils = document.querySelectorAll('.pupil');
+
+      let targetX = 0;
+      let targetY = 0;
+      let currentX = 0;
+      let currentY = 0;
+      let rafId = null;
+      let lastTime = null;
+
+      const coarseQuery = window.matchMedia('(pointer: coarse)');
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+      function applyGaze(gx, gy) {
+        const valX = gx.toFixed(5);
+        const valY = gy.toFixed(5);
+        for (let i = 0; i < pupils.length; i++) {
+          pupils[i].style.setProperty('--gx', valX);
+          pupils[i].style.setProperty('--gy', valY);
+        }
+      }
+
+      function easeLoop(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const dt = Math.min(timestamp - lastTime, 64);
+        lastTime = timestamp;
+
+        if (reducedMotionQuery.matches) {
+          currentX = 0;
+          currentY = 0;
+          applyGaze(0, 0);
+          rafId = null;
+          lastTime = null;
+          return;
+        }
+
+        if (coarseQuery.matches) {
+          // Coarse pointer idle animation: 11s period, 0.5 deflection
+          const angle = (timestamp / 11000) * 2 * Math.PI;
+          currentX = 0.5 * Math.cos(angle);
+          currentY = 0.5 * Math.sin(angle);
+          applyGaze(currentX, currentY);
+          rafId = requestAnimationFrame(easeLoop);
+          return;
+        }
+
+        // Time-based exponential ease
+        const k = 1 - Math.exp(-dt / 95);
+        currentX += (targetX - currentX) * k;
+        currentY += (targetY - currentY) * k;
+
+        // Check if arrived within 0.0005
+        if (Math.abs(targetX - currentX) < 0.0005 && Math.abs(targetY - currentY) < 0.0005) {
+          currentX = targetX;
+          currentY = targetY;
+          applyGaze(currentX, currentY);
+          rafId = null;
+          lastTime = null;
+          return;
+        }
+
+        applyGaze(currentX, currentY);
+        rafId = requestAnimationFrame(easeLoop);
+      }
+
+      function startLoop() {
+        if (!rafId) {
+          lastTime = null;
+          rafId = requestAnimationFrame(easeLoop);
+        }
+      }
+
+      function stopLoop() {
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+          lastTime = null;
+        }
+      }
+
+      function onPointerMove(e) {
+        if (reducedMotionQuery.matches || coarseQuery.matches) return;
+
+        const rect = frame.getBoundingClientRect();
+        const midX = rect.left + rect.width * 0.49463;
+        const midY = rect.top + rect.height * 0.34444;
+
+        const dx = e.clientX - midX;
+        const dy = e.clientY - midY;
+        const dist = Math.hypot(dx, dy);
+
+        // 6px dead zone around eye midpoint
+        if (dist <= 6) {
+          return;
+        }
+
+        // Target is unit vector: direction only, distance discarded
+        targetX = dx / dist;
+        targetY = dy / dist;
+
+        startLoop();
+      }
+
+      function handleModeChange() {
+        stopLoop();
+        if (reducedMotionQuery.matches) {
+          currentX = 0;
+          currentY = 0;
+          targetX = 0;
+          targetY = 0;
+          applyGaze(0, 0);
+        } else if (coarseQuery.matches) {
+          startLoop();
+        } else {
+          startLoop();
+        }
+      }
+
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+
+      if (coarseQuery.addEventListener) {
+        coarseQuery.addEventListener('change', handleModeChange);
+        reducedMotionQuery.addEventListener('change', handleModeChange);
+      } else {
+        coarseQuery.addListener(handleModeChange);
+        reducedMotionQuery.addListener(handleModeChange);
+      }
+
+      // Initial state evaluation
+      if (reducedMotionQuery.matches) {
+        applyGaze(0, 0);
+      } else if (coarseQuery.matches) {
+        startLoop();
+      } else {
+        applyGaze(0, 0);
+      }
+    })();
+  </script>
+</body>
+</html>
